@@ -16,9 +16,56 @@
     <button id="btnCari">Cari</button>
 
     <br><br>
-    
+
     negara : <p id="negara"></p>
     provinsi : <p id="provinsi"></p>
     kecamatan : <p id="kecamatan"></p>
     longitude : <p id="longitude"></p>
     latitude : <p id="latitude"></p>
+
+     <script>
+        function ambilData() {
+            const kota = $("#inputLokasi").val();
+            const urlapi = "https://api.maptiler.com/geocoding/" + kota + ".json?key=Eq0rtMU0SPHv3YUxlhGe";
+
+            $.ajax({
+                url: urlapi,
+                method: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+
+                    const feature = data.features[0];
+
+                    
+                    let long = feature.geometry.coordinates[0];
+                    let lat = feature.geometry.coordinates[1];
+
+                    
+                    let negara = feature.context[1] ? feature.context[1].text : "-";
+                    let provinsi = feature.context[0] ? feature.context[0].text : "-";
+                    let kecamatan = feature.text ? feature.text : "-";
+
+                    
+                    $("#negara").html(negara);
+                    $("#provinsi").html(provinsi);
+                    $("#kecamatan").html(kecamatan);
+                    $("#longitude").html(long);
+                    $("#latitude").html(lat);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        
+        $("#btnCari").click(function() {
+            ambilData();
+        });
+
+        
+        ambilData();
+    </script>
+</body>
+</html>
